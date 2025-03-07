@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movetrack</title>
+    <script src="capacitor.js"></script> 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" crossorigin=""/>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+</head>
+
+<body>
+
+    <ion-app>
+
+        <!-- Sector de ruteo -->
+        <ion-router id="ruteo">
+            <ion-route url="/" component="page-home"></ion-route>
+            <ion-route url="/login" component="page-login"></ion-route>
+            <ion-route url="/registrarU" component="page-registrarU"></ion-route>
+            <ion-route url="/registrarE" component="page-registrarE"></ion-route>
+            <ion-route url="/listado" component="page-listado"></ion-route>
+            <ion-route url="/informe" component="page-informe"></ion-route>
+            <ion-route url="/mapa" component="page-mapa"></ion-route>
+        </ion-router>
+        <ion-nav></ion-nav>
+
+        <!-- Sector del menú -->
+        <ion-menu content-id="main-content" id="menu">
+            <ion-header>
+                <ion-toolbar color="danger">
+                    <ion-title>Seleccione una opción</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item href="/registrarU" onclick="cerrarMenu()" id="btnMenuRegistrarU"><ion-label>Registrar Usuario</ion-label></ion-item>
+                <ion-item href="/login" onclick="cerrarMenu()" id="btnMenuLogin"><ion-label>Login</ion-label></ion-item>
+                <ion-item href="/registrarE" onclick="cerrarMenu()" id="btnMenuRegistrarE"><ion-label>Registrar Ejercicio</ion-label></ion-item>
+                <ion-item href="/listado" onclick="cerrarMenu()" id="btnMenuListado"><ion-label>Mostrar Listado</ion-label></ion-item>
+                <ion-item href="/informe" onclick="cerrarMenu()" id="btnMenuInforme"><ion-label>Mostrar Informe</ion-label></ion-item>
+                <ion-item href="/mapa" onclick="cerrarMenu()" id="btnMenuMapa"><ion-label>Mostrar Mapa</ion-label></ion-item>
+                <ion-item href="/" onclick="cerrarMenu()" id="btnMenuLogout"><ion-label>Logout</ion-label></ion-item>
+            </ion-content>
+        </ion-menu>
+        <div class="ion-page" id="main-content">
+        </div>
+
+        <!-- SECTOR DE PÁGINAS -->
+
+        <!-- Página home  -->
+        <page-home class="ion-page" id="pantalla-home">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Movetrack</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding"> Bienvenidos a nuestra App </ion-content>
+        </page-home>
+
+        <!-- Página login  -->
+        <page-login class="ion-page" id="pantalla-login">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Movetrack</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item>
+                    <ion-label>
+                        <h2>Login</h2>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Usuario:" id="txtLoginUsuario"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Password:" type="password" id="txtLoginPassword"></ion-input>
+                </ion-item><br>
+                <ion-button id="btnHacerLogin">Login</ion-button>
+            </ion-content>
+        </page-login>
+
+        <!-- Página registrar usuario -->
+        <page-registrarU class="ion-page" id="pantalla-registrarU">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Movetrack</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item>
+                    <ion-label>
+                        <h2>Registrar Usuario</h2>
+                    </ion-label>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Usuario:" id="txtRegistrarUUsuario"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Password:" type="password" id="txtRegistrarUPassword"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-select label="Pais:" id="slcRegistrarUPais"></ion-select>
+                </ion-item><br>
+                <ion-button id="btnRegistrarUsuario">Registrar Usuario</ion-button>
+            </ion-content>
+        </page-registrarU>
+
+
+        <!-- Página Registrar Ejercicio  -->
+        <page-registrarE class="ion-page" id="pantalla-registrarE">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Registro de Actividades</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item>
+                    <ion-select label="Actividad" id="slcRegistrarActividad" required></ion-select>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Tiempo" id="dateRegistrarTiempo" type="number" min="1" placeholder="minutos" required></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input label="Fecha" id="dateRegistrarFecha" type="date" max="" required></ion-input>
+                </ion-item><br>
+                <ion-button id="btnHacerRegistroEjercicio">Registrar</ion-button>
+            </ion-content>
+        </page-registrarE>
+
+        <!-- Página listado  -->
+        <page-listado class="ion-page" id="pantalla-listado">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Historial de Actividades</ion-title>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content class="ion-padding">
+                <ion-item>
+                    <ion-label>Filtrar por:</ion-label>
+                    <ion-select id="filtroEjercicios" value="completo" onchange="filtrarListado()">
+                        <ion-select-option value="completo">Historial completo</ion-select-option>
+                        <ion-select-option value="semana">Última semana</ion-select-option>
+                        <ion-select-option value="mes">Último mes</ion-select-option>
+                    </ion-select>
+                </ion-item>
+                <ion-list id="contenedorListado"></ion-list>
+            </ion-content>
+        </page-listado>
+
+        <!-- Página informe  -->
+        <page-informe class="ion-page" id="pantalla-informe">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Seguimiento de Actividades</ion-title>
+                </ion-toolbar>
+            </ion-header>
+        <ion-content class="ion-padding">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Total de Minutos Registrados:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p id="totalMinutos">0</p>
+              </ion-card-content>
+            </ion-card>
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Minutos del Día:</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <p id="minutosDiarios">0</p>
+              </ion-card-content>
+            </ion-card>
+          </ion-content>
+        </page-informe>
+
+        <!-- Página mapa  -->
+        <page-mapa class="ion-page" id="pantalla-mapa">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-buttons slot="start">
+                        <ion-menu-button></ion-menu-button>
+                    </ion-buttons>
+                    <ion-title>Seguimiento</ion-title>
+                </ion-toolbar>
+            </ion-header>
+        <ion-content class="ion-padding">
+            <ion-card>
+              <ion-card-header>
+                <ion-card-title>Mapa de Usuarios</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div id="map" style="height: 400px;"></div>
+              </ion-card-content>
+            </ion-card>
+          </ion-content>
+        </page-mapa>
+
+    </ion-app>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" crossorigin=""></script>
+    <script src="obli.js"></script>
+
+</body>
+
+</html>
